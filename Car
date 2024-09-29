@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Expense and Revenue Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Car Revenue and Expense Tracker</h1>
+        
+        <!-- Form to input data for car 1 and car 2 -->
+        <form id="carForm">
+            <!-- Car 1 -->
+            <h2>Car 1</h2>
+            <label for="car1Revenue">Revenue (EGP):</label>
+            <input type="number" id="car1Revenue" placeholder="Enter revenue for Car 1" required>
+            
+            <label for="car1Expenses">Expenses (EGP):</label>
+            <input type="number" id="car1Expenses" placeholder="Enter expenses for Car 1" required>
+            
+            <div class="result" id="car1Net">Net: 0 EGP</div>
+
+            <!-- Car 2 -->
+            <h2>Car 2</h2>
+            <label for="car2Revenue">Revenue (EGP):</label>
+            <input type="number" id="car2Revenue" placeholder="Enter revenue for Car 2" required>
+            
+            <label for="car2Expenses">Expenses (EGP):</label>
+            <input type="number" id="car2Expenses" placeholder="Enter expenses for Car 2" required>
+            
+            <div class="result" id="car2Net">Net: 0 EGP</div>
+
+            <!-- Total Net -->
+            <h2>Total Net</h2>
+            <div class="result" id="totalNet">Total Net: 0 EGP</div>
+            
+            <button type="submit">Save Data</button>
+        </form>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('carForm').addEventListener('input', function() {
+            // Get input values for car 1 and car 2
+            let car1Revenue = parseFloat(document.getElementById('car1Revenue').value) || 0;
+            let car1Expenses = parseFloat(document.getElementById('car1Expenses').value) || 0;
+            let car2Revenue = parseFloat(document.getElementById('car2Revenue').value) || 0;
+            let car2Expenses = parseFloat(document.getElementById('car2Expenses').value) || 0;
+
+            // Calculate net for each car
+            let car1Net = car1Revenue - car1Expenses;
+            let car2Net = car2Revenue - car2Expenses;
+
+            // Update the net display for each car
+            document.getElementById('car1Net').textContent = `Net: ${car1Net} EGP`;
+            document.getElementById('car2Net').textContent = `Net: ${car2Net} EGP`;
+
+            // Calculate total net
+            let totalNet = car1Net + car2Net;
+
+            // Update the total net display
+            document.getElementById('totalNet').textContent = `Total Net: ${totalNet} EGP`;
+        });
+
+        document.getElementById('carForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let car1Revenue = parseFloat(document.getElementById('car1Revenue').value) || 0;
+            let car1Expenses = parseFloat(document.getElementById('car1Expenses').value) || 0;
+            let car2Revenue = parseFloat(document.getElementById('car2Revenue').value) || 0;
+            let car2Expenses = parseFloat(document.getElementById('car2Expenses').value) || 0;
+
+            let data = {
+                car1: { revenue: car1Revenue, expenses: car1Expenses, net: car1Revenue - car1Expenses },
+                car2: { revenue: car2Revenue, expenses: car2Expenses, net: car2Revenue - car2Expenses },
+                totalNet: (car1Revenue - car1Expenses) + (car2Revenue - car2Expenses)
+            };
+
+            // Save the data to localStorage
+            let savedData = localStorage.getItem('carData');
+            let carData = savedData ? JSON.parse(savedData) : [];
+            carData.push(data);
+            localStorage.setItem('carData', JSON.stringify(carData));
+
+            document.getElementById('message').textContent = "Data saved successfully!";
+            document.getElementById('carForm').reset();
+            document.getElementById('car1Net').textContent = 'Net: 0 EGP';
+            document.getElementById('car2Net').textContent = 'Net: 0 EGP';
+            document.getElementById('totalNet').textContent = 'Total Net: 0 EGP';
+        });
+    </script>
+
+</body>
+</html>
